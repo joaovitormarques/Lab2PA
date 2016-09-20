@@ -60,14 +60,15 @@ public class Tabuleiro {
     }
     
     
-    public Tabuleiro colocaRainha(Tabuleiro tab, int x, int y){
+    public Tabuleiro colocaRainha(Tabuleiro tab, int x, int y, int faltaColocar){
+        
         Tabuleiro auxtab = new Tabuleiro(tab.tamanho);
         for(int i=0; i<tab.tamanho; i++)
             for(int j=0; j<tab.tamanho; j++)
                 auxtab.tabuleiro[i][j] = tab.tabuleiro[i][j];
         
         auxtab.tabuleiro[x][y] = 2;
-        //Agora atualiza o tabueleiro
+        //Agora atualiza o tabuleiro
         //atualiza a coluna de x
         for(int i=0; i<tab.tamanho; i++)
             if(auxtab.tabuleiro[x][i] != 2)
@@ -91,7 +92,18 @@ public class Tabuleiro {
                     if(auxtab.tabuleiro[x-diagonal][y+diagonal] != 2)
                         auxtab.tabuleiro[x-diagonal][y+diagonal] = 1;
         }
-            
-        return auxtab;
+        if(faltaColocar == 0)
+            return auxtab;
+        for(int i=0; i<tab.tamanho; i++)
+            for(int j=0; j<tab.tamanho; j++){
+                Tabuleiro auxtab1 = new Tabuleiro(tab.tamanho);
+                 for(int u=0; u<tab.tamanho; u++)
+                     for(int v=0; v<tab.tamanho; v++)
+                         auxtab1.tabuleiro[u][v] = auxtab.tabuleiro[u][v];
+        
+                if(auxtab1.podeColocarRainha(auxtab1, i, j))
+                    return auxtab1.colocaRainha(auxtab1, i, j, faltaColocar - 1);
+            }
+        return null;
     }
 }
