@@ -15,7 +15,7 @@ public class Tabuleiro {
         this.tabuleiro = new int[tam][tam];
         for(int i=0; i<tam; i++)
             for(int j=0; j<tam; j++)
-                this.tabuleiro[i][j] =0;
+                this.tabuleiro[i][j] =1;
     }
     
     public void imprimeTabuleiro(Tabuleiro tab){
@@ -59,9 +59,62 @@ public class Tabuleiro {
         return true;
     }
     
+    public boolean EhSolucao(Tabuleiro tab){
+        for(int i=0; i<tab.tamanho; i++){
+            for(int j=0; j<tab.tamanho; j++){
+                if(tab.tabuleiro[i][j] == 2){
+                    //olha a coluna
+                    for(int u=0; u<tab.tamanho; u++)
+                        if(tab.tabuleiro[i][u] == 2 && u!=j)
+                           return false;
+                    //olha a linha
+                    for(int u=0; u<tab.tamanho; u++)
+                        if(tab.tabuleiro[u][j] == 2 && u!=i)
+                            return false;
+                    //olha as diagonais
+                    for(int diagonal = 1; diagonal<tab.tamanho; diagonal++){
+                        if(diagonal+i >=0 && diagonal+i<tab.tamanho && diagonal+j >=0 && diagonal+j<tab.tamanho)
+                            if(tab.tabuleiro[i+diagonal][j+diagonal] == 2)
+                                return false;
+                        if(i-diagonal >=0 && i-diagonal<tab.tamanho && j-diagonal >=0 && j-diagonal<tab.tamanho)
+                            if(tab.tabuleiro[i-diagonal][j-diagonal] == 2)
+                                return false;
+                        if(diagonal+i >=0 && diagonal+i<tab.tamanho && j-diagonal >=0 && j-diagonal<tab.tamanho)
+                            if(tab.tabuleiro[i+diagonal][j-diagonal] == 2)
+                                return false;
+                        if(i-diagonal >=0 && i-diagonal<tab.tamanho && diagonal+j >=0 && diagonal+j<tab.tamanho)
+                            if(tab.tabuleiro[i-diagonal][j+diagonal] == 2)
+                                return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
     
-    public Tabuleiro colocaRainha(Tabuleiro tab, int x, int y, int faltaColocar){
+    //atualiza quais casas sao atacadas por rainhas
+    public Tabuleiro atualiza(Tabuleiro tab){
+        Tabuleiro auxtab = new Tabuleiro(tab.tamanho);
+        for(int i=0; i<tab.tamanho; i++)
+            for(int j=0; j<tab.tamanho; j++){
+                auxtab.tabuleiro[i][j] = tab.tabuleiro[i][j];
+                if(auxtab.tabuleiro[i][j] != 2) //zera as casas atacadas pelas rainhas
+                    auxtab.tabuleiro[i][j] = 1;
+            }
+        return auxtab;
+    }
+    
+    public Tabuleiro tiraRainha(Tabuleiro tab, int x, int y){
+        Tabuleiro auxtab = new Tabuleiro(tab.tamanho);
+        for(int i=0; i<tab.tamanho; i++)
+            for(int j=0; j<tab.tamanho; j++)
+                auxtab.tabuleiro[i][j] = tab.tabuleiro[i][j];
         
+        auxtab.tabuleiro[x][y] = 0;
+        return auxtab;
+    }
+    
+    public Tabuleiro colocaRainha(Tabuleiro tab, int x, int y){
         Tabuleiro auxtab = new Tabuleiro(tab.tamanho);
         for(int i=0; i<tab.tamanho; i++)
             for(int j=0; j<tab.tamanho; j++)
@@ -92,18 +145,6 @@ public class Tabuleiro {
                     if(auxtab.tabuleiro[x-diagonal][y+diagonal] != 2)
                         auxtab.tabuleiro[x-diagonal][y+diagonal] = 1;
         }
-        if(faltaColocar == 0)
-            return auxtab;
-        for(int i=0; i<tab.tamanho; i++)
-            for(int j=0; j<tab.tamanho; j++){
-                Tabuleiro auxtab1 = new Tabuleiro(tab.tamanho);
-                 for(int u=0; u<tab.tamanho; u++)
-                     for(int v=0; v<tab.tamanho; v++)
-                         auxtab1.tabuleiro[u][v] = auxtab.tabuleiro[u][v];
-        
-                if(auxtab1.podeColocarRainha(auxtab1, i, j))
-                    return auxtab1.colocaRainha(auxtab1, i, j, faltaColocar - 1);
-            }
-        return null;
+        return auxtab;
     }
 }
