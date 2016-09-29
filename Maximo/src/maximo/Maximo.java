@@ -26,7 +26,7 @@ public class Maximo {
         while(true){ //a condição de parada é de escolha do usuário
             if(valor > maximoGlobal){
                 maximoGlobal = valor;
-                System.out.printf("%f é máximo global\n", maximoGlobal);
+                System.out.printf("%f é máximo global para x = %f e y = %f\n", maximoGlobal, x, y);
             }
             if(x > -10 && x < 10 && y > -10 && y < 10){
                 //olha os "vizinhos" para verificar maximo local
@@ -34,9 +34,9 @@ public class Maximo {
                    && valor > funcao(x, (float) (y+0.5)) && valor > funcao(x, (float) (y-0.5)) && valor > funcao((float) (x-0.5), (float) (y-0.5))
                    && valor > funcao((float) (x+0.5), (float) (y +0.5)) && valor > funcao((float) (x-0.5), (float) (y+0.5)) 
                    && valor > funcao((float) (x+0.5), (float) (y-0.5)))
-                        System.out.printf("%f é maximo local\n", valor);
+                        System.out.printf("%f é maximo local para x = %f e y = %f\n", valor, x, y);
             }
-            switch(gerador.nextInt(9)){
+            switch(gerador.nextInt(9)){ //ele tem a chance de ir para um vizinho
                 case 0:
                     proxValor = funcao(x, y);
                     break;
@@ -77,7 +77,7 @@ public class Maximo {
                     y = (float) (y-0.5);
                     break;
             }
-            if(proxValor - valor > 0)
+            if(proxValor - valor > 0) //delta E do algoritmo de têmpera simulada
                 valor = proxValor;
             else{ if(gerador.nextDouble() > Math.pow(Math.E, (proxValor - valor)/valor))
                         valor = proxValor;
